@@ -77,25 +77,27 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
     }
   }
 
+  // Color Swatch Handler
   const changeColor = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
-      const newVis = vis
-      Object.keys(newVis).forEach((key:string,index) => {
-        if(newVis[key].vis_config && (newVis[key].vis_config!.series_colors || newVis[key].vis_config!.map_value_colors || newVis[key].vis_config!.custom_color)){
-          if(newVis[key].vis_config!.series_colors){
-          Object.keys(newVis[key].vis_config!.series_colors).forEach((key2,index) => {
-            newVis[key].vis_config!.series_colors[key2] = event
-          })
-          } else if(newVis[key].vis_config!.map_value_colors) {
-            newVis[key].vis_config!.map_value_colors.pop()
-            newVis[key].vis_config!.map_value_colors.push(event)
-          } else if(newVis[key].vis_config!.custom_color) {
-            newVis[key].vis_config!.custom_color = event
-          }
+    const newVis = vis
+    Object.keys(newVis).forEach((key:string,index) => {
+      if(newVis[key].vis_config && (newVis[key].vis_config!.series_colors || newVis[key].vis_config!.map_value_colors || newVis[key].vis_config!.custom_color)){
+        if(newVis[key].vis_config!.series_colors){
+        Object.keys(newVis[key].vis_config!.series_colors).forEach((key2,index) => {
+          newVis[key].vis_config!.series_colors[key2] = event
+        })
+        } else if(newVis[key].vis_config!.map_value_colors) {
+          newVis[key].vis_config!.map_value_colors.pop()
+          newVis[key].vis_config!.map_value_colors.push(event)
+        } else if(newVis[key].vis_config!.custom_color) {
+          newVis[key].vis_config!.custom_color = event
         }
-      })
-      saveVisSettings(newVis)
+      }
+    })
+    saveVisSettings(newVis)
   }
 
+  // Change Vis Style Handler
   const handleClick = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
     const newVis = vis
     Object.keys(newVis).forEach((key,index) => {
@@ -104,41 +106,45 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
       }
     })
     saveVisSettings(newVis)
-    }
-    const handleClick2 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
-      const newVis = vis
-      Object.keys(newVis).forEach((key,index) => {
-        if(newVis[key].vis_config && newVis[key].vis_config!.series_point_styles){
-          Object.keys(newVis[key].vis_config!.series_point_styles).forEach((key2,index) => {
-            newVis[key].vis_config!.series_point_styles[key2] = event.toLowerCase()
-          })
-        } 
-      })  
-      saveVisSettings(newVis)
-      }
-      const handleClick3 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
-        const newVis = vis
-        Object.keys(newVis).forEach((key,index) => {
-          if(newVis[key]){
-            if(event == "Show Title"){
-              if(newVis[key].vis_config && newVis[key].vis_config!.show_single_value_title) {
-                newVis[key].title_hidden = false
-                newVis[key].vis_config!.show_single_value_title = true
-              } else {
-                newVis[key].title_hidden = false
-              }
-            } else {
-              if(newVis[key].vis_config && newVis[key].vis_config!.show_single_value_title) {
-                newVis[key].title_hidden = true
-                newVis[key].vis_config!.show_single_value_title = false
-              } else {
-                newVis[key].title_hidden = true
-              }
-            }
+  }
+
+  // Change Point Style Handler
+  const handleClick2 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
+    const newVis = vis
+    Object.keys(newVis).forEach((key,index) => {
+      if(newVis[key].vis_config && newVis[key].vis_config!.series_point_styles){
+        Object.keys(newVis[key].vis_config!.series_point_styles).forEach((key2,index) => {
+          newVis[key].vis_config!.series_point_styles[key2] = event.toLowerCase()
+        })
+      } 
+    })  
+    saveVisSettings(newVis)
+  }
+
+  // Show or Hide Vis Title Handler
+  const handleClick3 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
+    const newVis = vis
+    Object.keys(newVis).forEach((key,index) => {
+      if(newVis[key]){
+        if(event == "Show Title"){
+          if(newVis[key].vis_config && newVis[key].vis_config!.show_single_value_title) {
+            newVis[key].title_hidden = false
+            newVis[key].vis_config!.show_single_value_title = true
+          } else {
+            newVis[key].title_hidden = false
           }
-        })  
-        saveVisSettings(newVis)
+        } else {
+          if(newVis[key].vis_config && newVis[key].vis_config!.show_single_value_title) {
+            newVis[key].title_hidden = true
+            newVis[key].vis_config!.show_single_value_title = false
+          } else {
+            newVis[key].title_hidden = true
+          }
         }
+      }
+    })  
+    saveVisSettings(newVis)
+  }
   /////////////////////////////////
 
   /////////////////////////////////
@@ -160,11 +166,7 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
           .on('drillmodal:explore', canceller)
           // .on('dashboard:tile:explore', canceller)
           .on('dashboard:tile:view', canceller)
-          // .on('dashboard:tile:explore', updateUI.bind(null, true, revertUI))
-          // .on('dashboard:filters:changed', (e) => console.log(JSON.stringify(e)))
-          .on('dashboard:loaded',(e) => setVis(e.dashboard.options.elements))
-          // .on('dashboard:run:complete',(e) => console.log(e))
-          // .on('dashboard:options:set',(e) => console.log(e))
+          .on('dashboard:loaded',(e: any) => setVis(e.dashboard.options.elements))
           .build()
           .connect()
           .then(setDashboard)
