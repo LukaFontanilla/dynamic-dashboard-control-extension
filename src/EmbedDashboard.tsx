@@ -98,7 +98,7 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
   }
 
   // Change Vis Style Handler
-  const handleClick = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
+  const vizStyleHandler = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
     const newVis = vis
     Object.keys(newVis).forEach((key,index) => {
       if(newVis[key].vis_config && (newVis[key].vis_config!.type !== 'looker_map' && newVis[key].vis_config!.type !== 'single_value')){
@@ -109,7 +109,7 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
   }
 
   // Change Point Style Handler
-  const handleClick2 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
+  const pointStyleHandler = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
     const newVis = vis
     Object.keys(newVis).forEach((key,index) => {
       if(newVis[key].vis_config && newVis[key].vis_config!.series_point_styles){
@@ -122,7 +122,7 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
   }
 
   // Show or Hide Vis Title Handler
-  const handleClick3 = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
+  const vizTitleHandler = (dashboard:LookerEmbedDashboard | undefined,vis:ElementOptions,event:any) => {
     const newVis = vis
     Object.keys(newVis).forEach((key,index) => {
       if(newVis[key]){
@@ -153,7 +153,6 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
     (el) => {
       const hostUrl = context?.extensionSDK?.lookerHostData?.hostUrl
       if (el && hostUrl) {
-        context.extensionSDK.track('extension.data_portal.load_dashboard', 'dashboard-component-rendered')
         el.innerHTML = ''
         LookerEmbedSDK.init(hostUrl)
         LookerEmbedSDK.createDashboardWithId(id)
@@ -187,17 +186,17 @@ export const EmbedDashboard: React.FC<dashProps> = ({id}) => {
       event listeners. Not all vis' have the same structure and fields, so there will need to be more checks for each new viz added that may have a different layout than others.
       Currently the single value viz and map viz are not set to listen to the viz type change actions.</Paragraph>
       <Space>
-        <ButtonToggle onChange={(e) => handleClick(dashboard,vis,e)} id="run-dashboard">
+        <ButtonToggle onChange={(e) => vizStyleHandler(dashboard,vis,e)} id="run-dashboard">
           <ButtonItem>Line</ButtonItem>
           <ButtonItem>Column</ButtonItem>
           <ButtonItem>Bar</ButtonItem>
         </ButtonToggle>
-        <ButtonToggle onChange={(e) => handleClick2(dashboard,vis,e)} id="run-dashboard">
+        <ButtonToggle onChange={(e) => pointStyleHandler(dashboard,vis,e)} id="run-dashboard">
           <ButtonItem>Circle</ButtonItem>
           <ButtonItem>Diamond</ButtonItem>
           <ButtonItem>Triangle</ButtonItem>
         </ButtonToggle>
-        <ButtonToggle onChange={(e) => handleClick3(dashboard,vis,e)} id="run-dashboard">
+        <ButtonToggle onChange={(e) => vizTitleHandler(dashboard,vis,e)} id="run-dashboard">
           <ButtonItem>Show Title</ButtonItem>
           <ButtonItem>Hide Title</ButtonItem>
         </ButtonToggle>
